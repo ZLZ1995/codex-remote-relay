@@ -135,7 +135,26 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && url.pathname === "/codex/conversations") {
-      const response = await bridgeRequest("GET", "/codex/conversations", null);
+      const response = await bridgeRequest("GET", "/codex/conversations", {
+        projectId: url.searchParams.get("projectId") || "",
+      });
+      sendJson(res, response.statusCode || 200, response.payload);
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/codex/project") {
+      const response = await bridgeRequest("GET", "/codex/project", {
+        projectId: url.searchParams.get("projectId") || "",
+      });
+      sendJson(res, response.statusCode || 200, response.payload);
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/codex/history") {
+      const response = await bridgeRequest("GET", "/codex/history", {
+        conversationId: url.searchParams.get("conversationId") || "",
+        limit: url.searchParams.get("limit") || "20",
+      });
       sendJson(res, response.statusCode || 200, response.payload);
       return;
     }
@@ -167,6 +186,13 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const response = await bridgeRequest("POST", "/messages", body);
       sendJson(res, response.statusCode || 202, response.payload);
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/attachments") {
+      const body = await readBody(req);
+      const response = await bridgeRequest("POST", "/attachments", body, 180000);
+      sendJson(res, response.statusCode || 201, response.payload);
       return;
     }
 
