@@ -128,6 +128,18 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (req.method === "GET" && url.pathname === "/codex/projects") {
+      const response = await bridgeRequest("GET", "/codex/projects", null);
+      sendJson(res, response.statusCode || 200, response.payload);
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/codex/conversations") {
+      const response = await bridgeRequest("GET", "/codex/conversations", null);
+      sendJson(res, response.statusCode || 200, response.payload);
+      return;
+    }
+
     if (req.method === "GET" && url.pathname === "/events/history") {
       sendJson(res, 200, eventHistory);
       return;
