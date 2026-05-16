@@ -159,6 +159,12 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (req.method === "GET" && url.pathname === "/codex/statuses") {
+      const response = await bridgeRequest("GET", "/codex/statuses", null);
+      sendJson(res, response.statusCode || 200, response.payload);
+      return;
+    }
+
     if (req.method === "GET" && url.pathname === "/events/history") {
       sendJson(res, 200, eventHistory);
       return;
@@ -193,6 +199,13 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const response = await bridgeRequest("POST", "/attachments", body, 180000);
       sendJson(res, response.statusCode || 201, response.payload);
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/codex/status/ack") {
+      const body = await readBody(req);
+      const response = await bridgeRequest("POST", "/codex/status/ack", body);
+      sendJson(res, response.statusCode || 202, response.payload);
       return;
     }
 
