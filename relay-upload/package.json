@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "start": "node relay-server.js",
+    "start:relay": "node relay-server.js",
+    "start:bridge": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.20.1"
+  }
+}
