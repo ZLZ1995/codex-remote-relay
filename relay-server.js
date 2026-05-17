@@ -165,6 +165,14 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (req.method === "GET" && url.pathname === "/desktop-ui/status") {
+      const response = await bridgeRequest("GET", "/desktop-ui/status", {
+        conversationId: url.searchParams.get("conversationId") || "",
+      });
+      sendJson(res, response.statusCode || 200, response.payload);
+      return;
+    }
+
     if (req.method === "GET" && url.pathname === "/events/history") {
       sendJson(res, 200, eventHistory);
       return;
@@ -191,6 +199,13 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && url.pathname === "/messages") {
       const body = await readBody(req);
       const response = await bridgeRequest("POST", "/messages", body);
+      sendJson(res, response.statusCode || 202, response.payload);
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/desktop-ui/open") {
+      const body = await readBody(req);
+      const response = await bridgeRequest("POST", "/desktop-ui/open", body);
       sendJson(res, response.statusCode || 202, response.payload);
       return;
     }
